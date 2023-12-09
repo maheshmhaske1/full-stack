@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynamic Questionnaire</title>
+</head>
+<body>
+  <h1>Dynamic Questionnaire</h1>
+
+  <div id="questionnaire">
+    <!-- Questions and options will be dynamically added here -->
+  </div>
+
+  <button onclick="addQuestion()">Add Question</button>
+  <button onclick="submitQuestionnaire()">Submit</button>
+
+  <script>
+    var questionIndex = 1;
+
+    function addQuestion() {
+      var questionnaire = document.getElementById("questionnaire");
+
+      // Create question container
+      var questionContainer = document.createElement("div");
+
+      // Create question input
+      var questionInput = document.createElement("input");
+      questionInput.type = "text";
+      questionInput.placeholder = "Enter question";
+
+      // Create options container
+      var optionsContainer = document.createElement("div");
+
+      // Create option inputs
+      for (var i = 1; i <= 4; i++) {
+        var optionContainer = document.createElement("div");
+
+        // Create option input
+        var optionInput = document.createElement("input");
+        optionInput.type = "text";
+        optionInput.placeholder = "Option " + i;
+
+        optionContainer.appendChild(optionInput);
+        optionsContainer.appendChild(optionContainer);
+      }
+
+      // Create remove question button
+      var removeButton = document.createElement("button");
+      removeButton.textContent = "Remove Question";
+      removeButton.onclick = function () {
+        questionnaire.removeChild(questionContainer);
+      };
+
+      // Append question input, options container, and remove button to question container
+      questionContainer.appendChild(questionInput);
+      questionContainer.appendChild(optionsContainer);
+      questionContainer.appendChild(removeButton);
+
+      // Append question container to questionnaire
+      questionnaire.appendChild(questionContainer);
+    }
+
+    function submitQuestionnaire() {
+      var questionnaire = document.getElementById("questionnaire");
+      var questions = questionnaire.querySelectorAll("div");
+
+      var submittedData = {
+        chapter_id: "6333c356c5526b333ff6bac4",
+        test_data: []
+      };
+
+      // Iterate through each question
+      questions.forEach(function (question) {
+        var questionInput = question.querySelector("input[type='text']");
+        var optionsContainer = question.querySelectorAll("div");
+        var options = [];
+
+        // Iterate through each option
+        optionsContainer.forEach(function (optionContainer) {
+          var optionInput = optionContainer.querySelector("input[type='text']");
+
+          if (optionInput.value.trim() !== "") {
+            options.push(optionInput.value);
+          }
+        });
+
+        if (questionInput.value.trim() !== "" && options.length > 0) {
+          submittedData.test_data.push({
+            question_index: questionIndex,
+            question: questionInput.value,
+            options: options,
+            question_answer: 1 // Assuming the first option is the correct answer
+          });
+          questionIndex++; // Increment question index for the next question
+        }
+      });
+
+      // Display submitted data in console
+      console.log(JSON.stringify(submittedData));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+.auth-card {
+    /* padding: 20px; */
+    margin-top: 150px;
+    max-width: 100%;
+    /* border: 2px solid black; */
+}
+
+.login-btn {
+    border: 1px solid black;
+    border-radius: 0%;
+    background-color: black;
+    color: white;
+    font-weight: 500;
+}
+
+.login-btn:hover {
+    border: 1px solid black;
+    border-right: 5px solid rgb(10, 10, 10);
+    border-radius: 0%;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+    transition: all 0.4s ease;
+    /* Add a transition property */
+}
+
+.login-form input {
+    border-radius: 0%;
+    border: 1px solid black;
+}
+
+.login-form select {
+    border-radius: 0%;
+    border: 1px solid black;
+}

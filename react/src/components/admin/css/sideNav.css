@@ -1,0 +1,15 @@
+/* .sideNav{
+    border-right: 5px solid rgb(139, 136, 136);
+} */
+.custom-link {
+    color: black; /* Change the color to your desired color */
+    /* Add other link styles here if needed */
+  }
+
+  .cards{
+    margin-top: 75px;
+  }
+
+  .monthly-joined-box{
+    margin-top: 40px;
+  }
