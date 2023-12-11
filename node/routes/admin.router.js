@@ -13,7 +13,7 @@ router.post('/product/add', verifyAdmin, upload.array('images', 4), admin.addPro
 router.get('/product/get-all', verifyAdmin, admin.getAllProducts)
 router.post('/product/get-byId', verifyAdmin, admin.getProductsById)
 router.get('/product/get-byCategory', verifyAdmin, admin.getProductsByCategory)
-router.put('/product/update/:productId', verifyAdmin, upload.array('images', 4), admin.updateProduct)
+router.put('/product/update/:productId', upload.array('files', 4), admin.updateProduct)
 router.delete('/product/delete/:productId', verifyAdmin, admin.deleteProduct)
 router.post('/product/uploadImages/:productId/:folderName', admin.uploadImages)
 router.post('/product/uploadfolder', admin.uploadFolder)
