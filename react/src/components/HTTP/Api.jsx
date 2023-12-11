@@ -1,8 +1,7 @@
 import axios from "axios";
 const baseURL = "http://localhost:3001";
 const api = axios.create({
-  // baseURL: "http://localhost:3001",
-  baseURL: "http://leadplanner.lotusx.shop/api",
+  baseURL: "http://localhost:3001",
   headers: {
     "Content-Type": "application/json",
     Accept: "application.json",
