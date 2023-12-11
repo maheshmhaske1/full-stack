@@ -9,6 +9,7 @@ import {
   updateProd,
   updateProductApi,
 } from "../HTTP/Api";
+import axios from "axios";
 
 function EditProduct() {
   const { productId } = useParams();
@@ -74,52 +75,64 @@ function EditProduct() {
   };
 
   const updateProduct = async () => {
-    let fd = new FormData();
+    let formData = new FormData();
+    formData.append("productName", name);
+    formData.append("productDescription", description);
+    formData.append("price", price);
+    formData.append("totalQuantity", quantity);
+    formData.append("isActive", isActive);
+    formData.append("images", images);
     for (let i = 0; i < files?.length; i++) {
-      fd.append(`images${i + 1}`, files[i]);
+      formData.append(`files`, files[i]);
     }
 
-    fd.append("productName", name);
-    fd.append("productDescription", description);
-    fd.append("price", price);
-    fd.append("totalQuantity", quantity);
-    fd.append("isActive", isActive);
+    axios
+      .put("http://localhost:3001/admin/product/update/" + productId, formData)
+      .then((res) => {
+        console.log("res==>", res.data);
 
-    console.log("form data ==>",files);
-
-    const isProductUpdated = await updateProductApi(productId, fd);
-    if (isProductUpdated == "API FAILURE") {
-      toast({
-        description: "Something went wrong",
-        status: "error",
-        duration: 9000,
-        position: "top-right",
-        variant: "left-accent",
-        isClosable: true,
+        if (res.data.status == false) {
+          toast({
+            description: res.data.message,
+            status: "error",
+            duration: 9000,
+            position: "top-right",
+            variant: "left-accent",
+            isClosable: true,
+          });
+        }
+        if (res.data.status == true) {
+          toast({
+            description: res.data.message,
+            status: "success",
+            duration: 9000,
+            position: "top-right",
+            variant: "left-accent",
+            isClosable: true,
+          });
+          loadProduct();
+        }
+      })
+      .catch((err) => {
+        if (err.data.message == "API FAILURE") {
+          toast({
+            description: "Something went wrong",
+            status: "error",
+            duration: 9000,
+            position: "top-right",
+            variant: "left-accent",
+            isClosable: true,
+          });
+        }
       });
-    }
-    if (isProductUpdated.status == false) {
-      toast({
-        description: isProductUpdated.message,
-        status: "error",
-        duration: 9000,
-        position: "top-right",
-        variant: "left-accent",
-        isClosable: true,
-      });
-    }
-    if (isProductUpdated.status == true) {
-      toast({
-        description: isProductUpdated.message,
-        status: "success",
-        duration: 9000,
-        position: "top-right",
-        variant: "left-accent",
-        isClosable: true,
-      });
-      loadProduct();
-    }
   };
+
+  const handleDeleteImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages(newImages);
+  };
+
   useEffect(() => {
     loadProduct();
     getAllCat();
@@ -158,7 +171,7 @@ function EditProduct() {
                     <div className="card-body shadow">
                       <div className="row justify-content-center">
                         <div className="row">
-                          {images.map((image) => {
+                          {images.map((image, index) => {
                             return (
                               <>
                                 <div className="col-sm-4 mb-3">
@@ -172,10 +185,10 @@ function EditProduct() {
                                       <button
                                         className=" col btn refresh-btn mt-2"
                                         onClick={() => {
-                                          // alert(item.title);
+                                          handleDeleteImage(index);
                                         }}
                                       >
-                                        Delete
+                                        X
                                       </button>
                                     </div>
                                   </div>
