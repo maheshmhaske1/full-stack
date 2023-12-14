@@ -1,7 +1,8 @@
 import axios from "axios";
 const baseURL = "http://localhost:3001";
 const api = axios.create({
-  baseURL: "http://leadplanner.lotusx.shop/api/",
+  // baseURL: "http://localhost:3001",
+  baseURL: "http://leadplanner.lotusx.shop/api",
   headers: {
     "Content-Type": "application/json",
     Accept: "application.json",
@@ -163,6 +164,18 @@ export const updateProductApi = async (productId, updateData) => {
     const response = await api.put(
       `/admin/product/update/${productId}`,
       updateData
+    );
+    return response.data;
+  } catch (error) {
+    return "API FAILURE";
+  }
+};
+
+export const deleteProductImageApi = async (payload) => {
+  try {
+    const response = await api.put(
+      `/admin/product/deleteImage`,
+      payload
     );
     return response.data;
   } catch (error) {

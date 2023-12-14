@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import SideNav from "./SideNav";
 import { useToast } from "@chakra-ui/react";
-import CloudinaryWidget from "./CloudinaryWidget ";
+import { confirmAlert } from "react-confirm-alert"; // Import
+import "react-confirm-alert/src/react-confirm-alert.css";
 import { useParams } from "react-router-dom";
 import {
   getProduct,
   getAllCategories,
   updateProd,
   updateProductApi,
+  deleteProductImageApi,
 } from "../HTTP/Api";
 import axios from "axios";
 
@@ -21,7 +23,6 @@ function EditProduct() {
   const [files, setFiles] = useState(null);
   const [description, setDescription] = useState();
   const [category, setCategory] = useState([]);
-  const [newImage, setNewImage] = useState([]);
   const [isActive, setIsActive] = useState();
   const toast = useToast();
 
@@ -71,6 +72,10 @@ function EditProduct() {
       setPrice(productinfo.data[0].price);
       setQuantity(productinfo.data[0].totalQuantity);
       setIsActive(productinfo.data[0].isActive);
+      setTimeout(() => {
+        console.log(typeof images);
+        console.log("images ==>", images);
+      }, 2000);
     }
   };
 
@@ -87,7 +92,7 @@ function EditProduct() {
     }
 
     axios
-      .put("http://localhost:3001/admin/product/update/" + productId, formData)
+      .put("http://leadplanner.lotusx.shop/api/admin/product/update/" + productId, formData)
       .then((res) => {
         console.log("res==>", res.data);
 
@@ -127,10 +132,58 @@ function EditProduct() {
       });
   };
 
-  const handleDeleteImage = (index) => {
-    const newImages = [...images];
-    newImages.splice(index, 1);
-    setImages(newImages);
+  const handleDeleteImage = (image) => {
+    confirmAlert({
+      title: 'CONFIRM',
+      message: "Are you sure?",
+      buttons: [
+        {
+          label: "DELETE",
+          onClick: async () => {
+            const isImageDelete = await deleteProductImageApi({
+              productId,
+              imageId: image,
+            });
+
+            if (isImageDelete == "API FAILURE") {
+              toast({
+                description: "Something went wrong",
+                status: "error",
+                duration: 9000,
+                position: "top-right",
+                variant: "left-accent",
+                isClosable: true,
+              });
+            }
+            if (isImageDelete.status == false) {
+              toast({
+                description: isImageDelete.message,
+                status: "error",
+                duration: 9000,
+                position: "top-right",
+                variant: "left-accent",
+                isClosable: true,
+              });
+            }
+            if (isImageDelete.status == true) {
+              toast({
+                description: isImageDelete.message,
+                status: "success",
+                duration: 9000,
+                position: "top-right",
+                variant: "left-accent",
+                isClosable: true,
+              });
+              loadProduct();
+            }
+          },
+        },
+        {
+          label: "CANCEL",
+          onClick: () => {},
+        },
+      ],
+    });
   };
 
   useEffect(() => {
@@ -185,7 +238,7 @@ function EditProduct() {
                                       <button
                                         className=" col btn refresh-btn mt-2"
                                         onClick={() => {
-                                          handleDeleteImage(index);
+                                          handleDeleteImage(image);
                                         }}
                                       >
                                         X
