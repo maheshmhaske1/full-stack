@@ -251,6 +251,53 @@ exports.updateProduct = async (req, res) => {
 
 }
 
+exports.deleteProductImage = async (req, res) => {
+const { productId, imageId } = req.body;
+    const missingFields = ['productId', 'imageId']
+        .filter(field => !req.body[field]);
+
+    if (missingFields.length > 0) {
+        return res.json({
+            status: false,
+            message: `Missing required fields: ${missingFields.join(', ')}`
+        });
+    }
+
+    const isProductExists = await products.findOne({ _id: new mongoose.Types.ObjectId(productId) });
+    if (!isProductExists) {
+        return res.json({
+            status: false,
+            message: `product not found`
+        });
+    }
+
+    if (!isProductExists.images.includes(imageId)) {
+        return res.json({
+            status: false,
+            message: `image not found`
+        });
+    }
+
+    await products.updateMany(
+        { _id: new mongoose.Types.ObjectId(productId) },
+        {
+            $pull: { images: imageId }
+        })
+        .then(success => {
+            return res.json({
+                status: true,
+                message: `image deleted`,
+                data: success
+            });
+        })
+        .catch(error => {
+            return res.json({
+                status: false,
+                message: `something went wrong`
+            });
+        })
+}
+
 exports.deleteProduct = async (req, res) => {
     const { productId } = req.params;
 
