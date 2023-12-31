@@ -13,11 +13,11 @@ background-color: white !important;
 #brand-name {
     color: #AEA59B;
     font-weight: 800;
-    font-size: 25px;
+    font-size: 27px;
 }
 
 #brand-name img {
-    height: 40px;
+    height: 10px;
 }
 
 #navbarSupportedContent ul li {
@@ -43,10 +43,7 @@ background-color: white !important;
     color: #FF6A88 !important;
 }
 
-#nav-container {
-    padding-left: 50px;
-    margin-right: 50px;
-}
+
 
 #btn-signin {
     background-color: #FF6A88;

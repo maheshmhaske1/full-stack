@@ -1,0 +1,29 @@
+.btn-add-to-cart {
+    border: 1px solid #FF6A88;
+    background-color: #FF6A88;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-add-to-cart:hover {
+    border: 1px solid #FF6A88;
+    background-color: #ffffff;
+    color: #FF6A88;
+    font-weight: bold;
+}
+
+.hr {
+    background-color: #f50303;
+    height: 3px;
+}
+
+.category-rounded {
+    border-radius: 70%;
+}
+
+
+#cat-brand-name {
+    color: #a87e4e !important;
+    font-weight: 800;
+    font-size: 27px;
+}

@@ -2,7 +2,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./Home";
 import PageNotFound from "./404";
 import Registration from "./auth/Registration";
 import Login from "./auth/Login";
@@ -17,6 +16,7 @@ import SecureRoutesAdmin from "./SecureRoutesAdmin";
 import EditProduct from "./admin/EditProduct";
 import AdminTicketManagement from "./admin/AdminTicketManagement";
 import AdminFaqManagement from "./admin/AdminFaqManagement";
+import Home from "./site/Home";
 // import Testing from "./Testing";
 
 function Pages() {

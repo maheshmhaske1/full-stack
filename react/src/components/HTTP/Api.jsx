@@ -1,8 +1,8 @@
 import axios from "axios";
 const baseURL = "http://localhost:3001";
 const api = axios.create({
-  // baseURL: "http://localhost:3001",
-  baseURL: "http://leadplanner.lotusx.shop/api",
+  baseURL: "http://localhost:3001",
+  // baseURL: "http://leadplanner.lotusx.shop/api",
   headers: {
     "Content-Type": "application/json",
     Accept: "application.json",
@@ -90,9 +90,9 @@ export const getAllCategories = async (username) => {
   }
 };
 
-export const getAllProducts = async (username) => {
+export const getAllProducts = async (type) => {
   try {
-    const response = await api.get(`/admin/product/get-all`);
+    const response = await api.post(`/admin/product/get-all`, type);
     return response.data;
   } catch (error) {
     return "API FAILURE";
@@ -160,6 +160,8 @@ export const deleteProduct = async (payload) => {
 };
 
 export const updateProductApi = async (productId, updateData) => {
+  console.log("updateData", updateData);
+  console.log("productId", productId);
   try {
     const response = await api.put(
       `/admin/product/update/${productId}`,
@@ -173,10 +175,7 @@ export const updateProductApi = async (productId, updateData) => {
 
 export const deleteProductImageApi = async (payload) => {
   try {
-    const response = await api.put(
-      `/admin/product/deleteImage`,
-      payload
-    );
+    const response = await api.put(`/admin/product/deleteImage`, payload);
     return response.data;
   } catch (error) {
     return "API FAILURE";

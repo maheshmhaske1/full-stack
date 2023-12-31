@@ -14,19 +14,7 @@ cloudinary.config({
 //=============== PRODUCT APIS ==============//
 exports.addProduct = async (req, res) => {
     const { productName, productDescription, price, category, totalQuantity } = req.body;
-    if (!req.files || req.files.length === 0) {
-        return res.json({
-            status: false,
-            message: 'Please select product images to upload.'
-        });
-    }
 
-    if (req.files.length > 5) {
-        return res.json({
-            status: false,
-            message: 'Maximum five files allowed to upload.'
-        });
-    }
 
     const missingFields = ['productName', 'productDescription', 'price', 'category', 'totalQuantity']
         .filter(field => !req.body[field]);
@@ -48,42 +36,11 @@ exports.addProduct = async (req, res) => {
 
     await new products(req.body)
         .save()
-        .then(async (success) => {
-            const folder = `products/${success._id}`;
-            const uploadedImages = [];
-
-            req.files.forEach(async (file) => {
-                cloudinary.uploader.upload_stream(
-                    { resource_type: 'auto', folder: folder, public_id: file.originalname },
-                    (error, result) => {
-                        if (error) {
-                            return res.json({
-                                status: false,
-                                message: `Error uploading to Cloudinary.`
-                            })
-                        }
-                        uploadedImages.push(result.secure_url);
-                        if (uploadedImages.length === req.files.length) {
-                            products.updateOne(
-                                { _id: new mongoose.Types.ObjectId(success._id) },
-                                { $set: { images: uploadedImages } }
-                            )
-                                .then((success) => {
-                                    return res.json({
-                                        status: true,
-                                        message: `product Added`,
-                                        data: success
-                                    });
-                                })
-                                .catch(error => {
-                                    return res.json({
-                                        status: false,
-                                        message: `something went wrong`
-                                    });
-                                })
-                        }
-                    }
-                ).end(file.buffer);
+        .then((success) => {
+            return res.json({
+                status: true,
+                message: `product Added`,
+                data: success
             });
         })
         .catch(error => {
@@ -95,9 +52,15 @@ exports.addProduct = async (req, res) => {
 }
 
 exports.getAllProducts = async (req, res) => {
+    const { type } = req.body
+
+    
+
     await products.aggregate([
         {
-            $match: { isActive: true }
+            $match: {
+                isActive: type
+            }
         },
         {
             $lookup: {
@@ -252,7 +215,7 @@ exports.updateProduct = async (req, res) => {
 }
 
 exports.deleteProductImage = async (req, res) => {
-const { productId, imageId } = req.body;
+    const { productId, imageId } = req.body;
     const missingFields = ['productId', 'imageId']
         .filter(field => !req.body[field]);
 

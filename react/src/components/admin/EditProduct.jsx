@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SideNav from "./SideNav";
+import { Badge } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -80,22 +81,45 @@ function EditProduct() {
   };
 
   const updateProduct = async () => {
-    let formData = new FormData();
-    formData.append("productName", name);
-    formData.append("productDescription", description);
-    formData.append("price", price);
-    formData.append("totalQuantity", quantity);
-    formData.append("isActive", isActive);
-    formData.append("images", images);
-    for (let i = 0; i < files?.length; i++) {
-      formData.append(`files`, files[i]);
+    const previousTotalImages = images.length;
+    const formData = new FormData();
+    const payload = {
+      productName: name,
+      productDescription: description,
+      price: price,
+      totalQuantity: quantity,
+      isActive: isActive,
+    };
+
+    if (files?.length > 0) {
+      let totalImages = files?.length + previousTotalImages;
+      if (totalImages > 5) {
+        toast({
+          description: "Maximum 5 images are allowed",
+          status: "error",
+          duration: 9000,
+          position: "top-right",
+          variant: "left-accent",
+          isClosable: true,
+        });
+        return;
+      }
+      formData.append("productName", name);
+      formData.append("productDescription", description);
+      formData.append("price", price);
+      formData.append("totalQuantity", quantity);
+      formData.append("isActive", isActive);
+      for (let i = 0; i < files?.length; i++) {
+        formData.append(`files`, files[i]);
+      }
     }
 
     axios
-      .put("http://leadplanner.lotusx.shop/api/admin/product/update/" + productId, formData)
+      .put(
+        "http://leadplanner.lotusx.shop/api/admin/product/update/" + productId,
+        files?.length > 0 ? formData : payload
+      )
       .then((res) => {
-        console.log("res==>", res.data);
-
         if (res.data.status == false) {
           toast({
             description: res.data.message,
@@ -134,7 +158,7 @@ function EditProduct() {
 
   const handleDeleteImage = (image) => {
     confirmAlert({
-      title: 'CONFIRM',
+      title: "CONFIRM",
       message: "Are you sure?",
       buttons: [
         {
@@ -224,6 +248,18 @@ function EditProduct() {
                     <div className="card-body shadow">
                       <div className="row justify-content-center">
                         <div className="row">
+                          {images.length == 0 && (
+                            <>
+                              <Badge
+                                fontSize="6.0em"
+                                colorScheme="purple"
+                                className="text-center rounded"
+                              >
+                                {" "}
+                                No Images.
+                              </Badge>
+                            </>
+                          )}
                           {images.map((image, index) => {
                             return (
                               <>

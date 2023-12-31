@@ -28,7 +28,9 @@ import {
   getAllCategories,
   getAllProducts,
   updateCategory,
+  updateProductApi,
 } from "../HTTP/Api";
+import axios from "axios";
 
 function AdminProductMangment() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -45,6 +47,8 @@ function AdminProductMangment() {
   const [addProductIsActive, setAddProductIsActive] = useState();
   const [addProductDescription, setAddProductDescription] = useState("");
   const [addProductCategory, setAddProductCategory] = useState("");
+  const [files, setFiles] = useState(null);
+  const [activeProduct, setActiveProduct] = useState("active");
   const [modelOpen, setModelOpen] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
@@ -65,8 +69,15 @@ function AdminProductMangment() {
     }
   };
 
-  const loadAllProducts = async () => {
-    const totalProducts = await getAllProducts();
+  const loadAllProducts = async (type) => {
+    activeProduct == "active"
+      ? setActiveProduct("inactive")
+      : setActiveProduct("active");
+
+    const payload = {
+      type: activeProduct == "active" ? true : false,
+    };
+    const totalProducts = await getAllProducts(payload);
     if (totalProducts == "API FAILURE") {
       toast({
         description: "Something went wrong",
@@ -137,8 +148,10 @@ function AdminProductMangment() {
       price: addProductPrice,
       category: addProductCategory,
       totalQuantity: addProductQuantity,
+      isActive: addProductIsActive,
     };
 
+    // const isProductAdded = await addProduct(payload);
     const isProductAdded = await addProduct(payload);
     if (isProductAdded == "API FAILURE") {
       toast({
@@ -183,7 +196,11 @@ function AdminProductMangment() {
     }
   };
 
-  const handeleDeleteProduct = async (productId) => {
+  const handeleProductStatusChange = async (productId, type) => {
+    const payload = {
+      isActive: type,
+    };
+
     if (!productId) {
       toast({
         description: "productId is required",
@@ -195,7 +212,7 @@ function AdminProductMangment() {
       });
       return;
     }
-    const isProductDeleted = await deleteProduct({ productId: productId });
+    const isProductDeleted = await updateProductApi(productId, payload);
     if (isProductDeleted == "API FAILURE") {
       toast({
         description: "Something went wrong",
@@ -215,7 +232,7 @@ function AdminProductMangment() {
       variant: "left-accent",
       isClosable: true,
     });
-    await loadAllProducts();
+    await loadAllProducts(type);
     {
       onClose();
     }
@@ -308,8 +325,14 @@ function AdminProductMangment() {
                 {currentTab === "product" && (
                   <div className="row">
                     <div className="col">
-                      <h4>Product Management</h4>{" "}
+                      <h4>Product Management</h4>
+                      <b>
+                        <span className={activeProduct==="active" ? "text-danger" : "text-success"}>
+                          ({products.length}) {activeProduct==="active" ? "Inactive" : "Active"} Products Found
+                        </span>
+                      </b>
                     </div>
+
                     <div className="col ">
                       <button
                         className="btn refresh-btn w-100"
@@ -355,7 +378,25 @@ function AdminProductMangment() {
                     </div>
                     <div className="col-md-6">
                       <div className="text-center p-1">
-                        <button className="btn refresh-btn">Refresh</button>
+                        {currentTab === "category" && (
+                          <button className="btn refresh-btn">Refresh</button>
+                        )}
+                        {currentTab === "product" && (
+                          <button
+                            className="btn refresh-btn"
+                            onClick={() => {
+                              loadAllProducts(
+                                activeProduct === "active"
+                                  ? "active"
+                                  : "unactive"
+                              );
+                            }}
+                          >
+                            {activeProduct === "active"
+                              ? "LOAD ACTIVE PRODUCTS?"
+                              : "LOAD UNACTIVE PRODUCTS?"}
+                          </button>
+                        )}
                       </div>
                     </div>
                     <div className="col-md-3">
@@ -514,16 +555,35 @@ function AdminProductMangment() {
                                 </td>
                                 <td>
                                   <Stack direction="row">
-                                    <Badge
-                                      variant="solid"
-                                      colorScheme="red"
-                                      fontSize="1em"
-                                      onClick={(e) => {
-                                        handeleDeleteProduct(product._id);
-                                      }}
-                                    >
-                                      Delete
-                                    </Badge>
+                                    {product.isActive == true ? (
+                                      <Badge
+                                        variant="solid"
+                                        colorScheme="red"
+                                        fontSize="1em"
+                                        onClick={(e) => {
+                                          handeleProductStatusChange(
+                                            product._id,
+                                            false
+                                          );
+                                        }}
+                                      >
+                                        deactivate
+                                      </Badge>
+                                    ) : (
+                                      <Badge
+                                        variant="solid"
+                                        colorScheme="green"
+                                        fontSize="1em"
+                                        onClick={(e) => {
+                                          handeleProductStatusChange(
+                                            product._id,
+                                            true
+                                          );
+                                        }}
+                                      >
+                                        activate
+                                      </Badge>
+                                    )}
                                     <Badge
                                       variant="solid"
                                       colorScheme="pink"
