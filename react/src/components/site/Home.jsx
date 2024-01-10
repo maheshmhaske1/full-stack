@@ -3,6 +3,7 @@ import Navbar from "../Navbar";
 import "./css/Home.css";
 import DefaultProducts from "./DefaultProducts";
 import DeafultCategories from "./DeafultCategories";
+import Footer from "../Footer";
 
 function Home() {
   return (
@@ -12,6 +13,7 @@ function Home() {
       <div className="container-fluid">
         <DeafultCategories />
         <DefaultProducts />
+        <Footer />
       </div>
     </>
   );

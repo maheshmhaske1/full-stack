@@ -65,6 +65,16 @@ function DefaultProducts() {
       price: 6999,
     },
     {
+      id: 1,
+      category: "Clothing",
+      title: "Comfortable Sneakers",
+      rating: 4.5,
+      imageUrl:
+        "https://www.highsnobiety.com/static-assets/dato/1699534637-most-comfortable-sneaker.jpg?fp-x=0.5&fp-y=0.5&fit=crop&auto=compress%2Cformat&cs=srgb&ar=1828%3A1219&w=1828&dpr=0.8",
+      description: "Premium sneakers for maximum comfort.",
+      price: 7999,
+    },
+    {
       id: 7,
       category: "Fitness",
       title: "Fitness Tracker",

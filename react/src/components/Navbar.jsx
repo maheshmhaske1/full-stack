@@ -4,7 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { logOut } from "./HTTP/Api";
 import { useEffect } from "react";
-import { Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
+import { Input, InputGroup, InputRightElement, Menu, MenuButton, MenuList, MenuItem, MenuGroup, MenuDivider, Button } from "@chakra-ui/react";
+import { Badge } from '@chakra-ui/react'
 
 function Navbar({ currentPath }) {
   const navigate = useNavigate();
@@ -26,7 +27,9 @@ function Navbar({ currentPath }) {
           id="nav"
         >
           <div className="container-fluid" id="nav-container">
-            <Link className="navbar-brand" to="/" id="brand-name">
+
+
+            <Link className="navbar-brand ml-4" to="/" id="brand-name">
               Flipkart
             </Link>
             <button
@@ -45,14 +48,16 @@ function Navbar({ currentPath }) {
               id="navbarSupportedContent"
             >
               <ul className="navbar-nav me-auto">
-               
+
               </ul>
-              <form className="d-flex" role="search">
-              <InputGroup size="lg" width="100" mr="2"> {/* Add margin-right */}
-                  <Input 
-                  focusBorderColor='pink.300'
-                  pr="4.5rem"
-                   placeholder="Search Products etc..." />
+
+              <div className="d-flex ml-2" role="search">
+
+                <InputGroup size="lg" width="100" mr="2"> {/* Add margin-right */}
+                  <Input
+                    focusBorderColor='pink.300'
+                    pr="4.5rem"
+                    placeholder="Search Products etc..." />
                   <InputRightElement>
                     <button
                       className="btn btn-lg text-white font-bold"
@@ -63,14 +68,40 @@ function Navbar({ currentPath }) {
                   </InputRightElement>
                 </InputGroup>
 
-                <button
-                  className="btn btn-lg text-white font-bold ml-4"
-                  id="btn-signin"
-                >
-                  Sign In
-                </button>
-              
-              </form>
+
+                <Menu className="font-bold ml-4">
+                  <MenuButton>
+                    <button
+                      className="btn btn-lg text-white font-bold"
+                      id="btn-signin"
+                    >
+                      Profile<b><i class="bi bi-list"></i></b>
+                    </button>
+                  </MenuButton>
+                  <MenuList>
+                    <MenuGroup title='My Profile'>
+                      <MenuItem>View</MenuItem>
+                    </MenuGroup>
+                    <MenuDivider />
+                    <MenuGroup title='Products'>
+                      <MenuItem>(<b>3</b>) Cart</MenuItem>
+                      <MenuItem>(<b>6</b>) Liked</MenuItem>
+                    </MenuGroup>
+                    <MenuDivider />
+                    <center>
+                      <MenuGroup title='Log Out' bg={"red.100"} p={2}>
+                      </MenuGroup>
+
+                    </center>
+
+                  </MenuList>
+                </Menu>
+
+              </div>
+              <div className="ml-2">
+
+              </div>
+
             </div>
           </div>
         </nav>

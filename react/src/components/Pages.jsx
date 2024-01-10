@@ -17,6 +17,7 @@ import EditProduct from "./admin/EditProduct";
 import AdminTicketManagement from "./admin/AdminTicketManagement";
 import AdminFaqManagement from "./admin/AdminFaqManagement";
 import Home from "./site/Home";
+import MyProfile from "./site/MyProfile";
 // import Testing from "./Testing";
 
 function Pages() {
@@ -66,7 +67,11 @@ function Pages() {
           path="/admin/manage/product/edit/:productId"
           element={<SecureRoutesAdmin Component={EditProduct} />}
         />
-        {/* <Route path="/" element={<SecureRoutesAdmin Component={Home} />} /> */}
+
+        <Route
+          path="/user/profile"
+          element={<MyProfile />}
+        />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
 
